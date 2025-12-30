@@ -1,5 +1,3 @@
---// upc1
-
 local InputService = game:GetService('UserInputService');
 local TextService = game:GetService('TextService');
 local CoreGui = game:GetService('CoreGui');
@@ -3520,31 +3518,48 @@ function Library:CreateWindow(...)
         ModalElement.Modal = Toggled;
 
         if Toggled then
-        -- Menu ouvert : on affiche immédiatement pour que le fade soit visible
-        Outer.Visible = true;
+            -- A bit scuffed, but if we're going from not toggled -> toggled we want to show the frame immediately so that the fade is visible.
+            Outer.Visible = true;
 
-        -- Curseur personnalisé
-        InputService.MouseIconEnabled = true;
-        InputService.MouseIcon = "rbxassetid://9619665977";  -- ← Change l'ID ici si tu veux un autre curseur
+            task.spawn(function()
+                -- TODO: add cursor fade?
+                local State = InputService.MouseIconEnabled;
 
-        -- Hotspot (point où le clic est détecté) – parfait pour cette flèche
-        InputService.MouseIconHotspot = Vector2.new(0, 0);
+                local Cursor = Drawing.new('Triangle');
+                Cursor.Thickness = 1;
+                Cursor.Filled = true;
+                Cursor.Visible = true;
 
-        -- Optionnel : curseur rainbow qui suit la couleur du menu
-        -- Décommente les lignes ci-dessous si tu veux cet effet
-        --[[
-        Library:GiveSignal(RenderStepped:Connect(function()
-            if not Toggled then return end
-            InputService.MouseIconColor = Library.CurrentRainbowColor or Library.AccentColor
-        end))
-        ]]
+                local CursorOutline = Drawing.new('Triangle');
+                CursorOutline.Thickness = 1;
+                CursorOutline.Filled = false;
+                CursorOutline.Color = Color3.new(0, 0, 0);
+                CursorOutline.Visible = true;
 
-    else
-        -- Menu fermé : on remet le curseur Roblox par défaut
-        InputService.MouseIconEnabled = true;
-        InputService.MouseIcon = "";                    -- "" = curseur standard de Roblox
-        InputService.MouseIconHotspot = Vector2.new(0, 0);
-    end
+                while Toggled and ScreenGui.Parent do
+                    InputService.MouseIconEnabled = false;
+
+                    local mPos = InputService:GetMouseLocation();
+
+                    Cursor.Color = Library.AccentColor;
+
+                    Cursor.PointA = Vector2.new(mPos.X, mPos.Y);
+                    Cursor.PointB = Vector2.new(mPos.X + 16, mPos.Y + 6);
+                    Cursor.PointC = Vector2.new(mPos.X + 6, mPos.Y + 16);
+
+                    CursorOutline.PointA = Cursor.PointA;
+                    CursorOutline.PointB = Cursor.PointB;
+                    CursorOutline.PointC = Cursor.PointC;
+
+                    RenderStepped:Wait();
+                end;
+
+                InputService.MouseIconEnabled = State;
+
+                Cursor:Remove();
+                CursorOutline:Remove();
+            end);
+        end;
 
         for _, Desc in next, Outer:GetDescendants() do
             local Properties = {};
