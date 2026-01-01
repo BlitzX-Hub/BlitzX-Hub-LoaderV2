@@ -74,6 +74,7 @@ local placeIdToGameKey = {
     [13253735473] = 'tridentsurvival',
     [13800223141] = 'lonesurvival',
     [139307005148921] = 'lonesurvival',
+    [13997018456] = 'Operation_siege'
     [0] = 'universal'
 }
 
@@ -81,6 +82,7 @@ local gameScripts = {
     ['arsenal'] = 'loadstring(game:HttpGet("https://api.junkie-development.de/api/v1/luascripts/public/38f6a7f0a3da390e651d7512deb2572cfd12c69bc8c6eaf520ad9664d9193a39/download"))()',
     ['tridentsurvival'] = 'loadstring(game:HttpGet("https://api.junkie-development.de/api/v1/luascripts/public/ee7eec2f5f7673560937b52e11bf38f2e19dd71cda41a8a4e42ebb359ec57f51/download"))()',
     ['lonesurvival'] = 'https://raw.githubusercontent.com/CheaterOnTop/ByYTBmaxxmaxx_11-universalV2/refs/heads/main/lonesurvival',
+    ['Operation_siege'] = '',
     ['universal'] = 'loadstring(game:HttpGet("https://api.junkie-development.de/api/v1/luascripts/public/38f6a7f0a3da390e651d7512deb2572cfd12c69bc8c6eaf520ad9664d9193a39/download"))()'  -- Integrated fallback
 }
 
@@ -108,6 +110,12 @@ local statusConfigs = {
         statut = 'dev',
         Level_8 = false,
         unsupported = 'JJsploit'
+    },
+    ['Operation_siege'] = {
+        name = 'Operation siege',
+        statut = 'dev',
+        Level_8 = true,
+        unsupported = 'JJsploit, solara, xeno,'
     },
     ['universal'] = {
         name = 'Universal Script',
