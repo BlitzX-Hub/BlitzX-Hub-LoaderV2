@@ -8,6 +8,7 @@ local TweenService = game:GetService('TweenService');
 local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
+--//
 
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
 
@@ -3603,14 +3604,26 @@ function Library:CreateWindow(...)
     end
 
     Library:GiveSignal(InputService.InputBegan:Connect(function(Input, Processed)
-        if type(Library.ToggleKeybind) == 'table' and Library.ToggleKeybind.Type == 'KeyPicker' then
-            if Input.UserInputType == Enum.UserInputType.Keyboard and Input.KeyCode.Name == Library.ToggleKeybind.Value then
-                task.spawn(Library.Toggle)
-            end
-        elseif Input.KeyCode == Enum.KeyCode.RightControl or (Input.KeyCode == Enum.KeyCode.RightShift and (not Processed)) then
+    -- Si tu as défini un Keybind personnalisé pour le menu
+    if type(Library.ToggleKeybind) == 'table' and Library.ToggleKeybind.Type == 'KeyPicker' then
+        if Input.UserInputType == Enum.UserInputType.Keyboard and Input.KeyCode.Name == Library.ToggleKeybind.Value then
             task.spawn(Library.Toggle)
+            return
         end
-    end))
+    end
+
+    -- Toujours activer le toggle sur RightControl, même si utilisé ailleurs
+    if Input.KeyCode == Enum.KeyCode.RightControl then
+        task.spawn(Library.Toggle)
+        return
+    end
+
+    -- Optionnel : garder RightShift aussi (mais sans vérifier Processed !)
+    if Input.KeyCode == Enum.KeyCode.RightShift then
+        task.spawn(Library.Toggle)
+        return
+    end
+end))
 
     if Config.AutoShow then task.spawn(Library.Toggle) end
 
